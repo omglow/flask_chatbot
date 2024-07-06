@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Oma Glow Chatbot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        #chatbox {
+            width: 100%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #chatlog {
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 20px;
+        }
+        #chatlog p {
+            margin: 10px 0;
+        }
+        #userInput {
+            width: calc(100% - 110px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbox">
+        <h1>Oma Glow Chatbot</h1>
+        <div id="chatlog">
+            <p>Welcome to Oma Glow! How can I assist you today?</p>
+        </div>
+        <input id="userInput" type="text" placeholder="Type a message..."/>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script type="text/javascript">
+        function sendMessage() {
+            var userMessage = $('#userInput').val();
+            if (userMessage.trim() === '') return;
+            $('#chatlog').append('<p><strong>You:</strong> ' + userMessage + '</p>');
+            $.get('/get', { msg: userMessage }, function(data) {
+                $('#chatlog').append('<p><strong>Bot:</strong> ' + data + '</p>');
+                $('#userInput').val('');
+                $('#chatlog').scrollTop($('#chatlog')[0].scrollHeight);
+            });
+        }
+
+        $('#userInput').on('keypress', function (e) {
+            if (e.which == 13) {
+                sendMessage();
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>
